@@ -3,8 +3,9 @@
     // Connection
     $connection = new AMQPConnection();
     $connection->setHost('127.0.0.1');
-    $connection->setLogin('guest');
-    $connection->setPassword('guest');
+    $connection->setLogin('test');
+    $connection->setPassword('test');
+    $connection->setVhost('testHost');
     $connection->connect();
 
     // Channel
