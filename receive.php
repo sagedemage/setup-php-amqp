@@ -15,7 +15,7 @@ $channel = new AMQPChannel($connection);
 $exchange = new AMQPExchange($channel);
 $exchange->setName('testExchange');
 
-$callback_func = function(AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
+$callback_func = function (AMQPEnvelope $message, AMQPQueue $q) use (&$max_consume) {
 	echo PHP_EOL, "----------", PHP_EOL;
 	echo " [X] Received ", $message->getBody(), PHP_EOL;
 	echo PHP_EOL, "----------", PHP_EOL;
@@ -29,19 +29,18 @@ $callback_func = function(AMQPEnvelope $message, AMQPQueue $q) use (&$max_consum
 try {
 	$routing_key = 'hello';
 
+	// Queue
 	$queue = new AMQPQueue($channel);
-
-	$queue->setName($routing_key);
-	$queue->setFlags(AMQP_NOPARAM);
+	$queue->setName('testQueue');
+	$queue->setFlags(AMQP_DURABLE);
 	$queue->declareQueue();
+	$queue->bind($exchange->getName(), $routing_key);
 
 	echo ' [*] Waiting for messages. To exit press CTRL+C', PHP_EOL;
 	$queue->consume($callback_func);
-}
-catch(AMQPQueueException $ex) {
+} catch (AMQPQueueException $ex) {
 	print_r($ex);
-}
-catch(Exception $ex) {
+} catch (Exception $ex) {
 	print_r($ex);
 }
 
